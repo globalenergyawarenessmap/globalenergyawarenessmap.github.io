@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Global Energy Awareness</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="vendor/leaflet.css">
+    <link rel="stylesheet" href="asset/site.css">
+  </head>
+  <body class="map-page">
+    <div class="app">
+      <header>
+        <h1>Global Energy Awareness</h1>
+        <nav class="top-menu" aria-label="Top menu">
+          <a class="menu-button" href="survey-overview.html">Survey Overview</a>
+          <a class="menu-button" href="about-energy-policy.html">About Energy Policy</a>
+          <a class="menu-button" href="supporting.html">Supportings</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="workspace" id="workspace" aria-label="Survey response map workspace">
+          <aside class="response-panel" aria-label="City list">
+            <div class="panel-head">
+              <h2 class="panel-title">City List</h2>
+              <span class="panel-count" id="response-count">0</span>
+            </div>
+            <ul class="response-list" id="response-list"></ul>
+          </aside>
+
+          <div class="resize-handle" id="resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize city list"></div>
+
+          <section class="map-shell" aria-label="City response map">
+            <div id="map"></div>
+            <div class="legend" aria-label="Area legend">
+              <span class="legend-item"><span class="dot urban"></span>Urban</span>
+              <span class="legend-item"><span class="dot suburban"></span>Suburban</span>
+              <span class="legend-item"><span class="dot rural"></span>Rural</span>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footnote" aria-label="Acknowledgement footnote">
+        <div class="footnote-inner">
+          <h2 class="footnote-title">Acknowledgement</h2>
+          <p>To more information, click <a href="acknowledgement.html">HERE!</a></p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="vendor/leaflet.js"></script>
+    <script src="asset/map.js"></script>
+  </body>
+</html>

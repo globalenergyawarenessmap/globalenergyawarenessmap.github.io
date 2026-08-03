@@ -1,0 +1,22 @@
+City,State/Province,Country,Latitude,Longitude,Knowledge,Area,Fair Investment,Energy Source
+Naju,Jeonnam,South Korea,35.0161,126.7108,4,Rural,Yes,Solar
+Hayward,California,USA,37.6688,-122.0808,1,Suburban,Yes,Gas
+Anaheim,California,USA,33.8366,-117.9143,2,Suburban,Unsure,Unknown
+Los Angeles,California,USA,34.0522,-118.2437,2,Urban,No,Solar
+Seoul,,South Korea,37.5665,126.978,3,Urban,Yes,Gas
+Saratoga,California,USA,37.2638,-122.023,3,Suburban,Yes,Solar + Gas
+Modesto,California,USA,37.6391,-120.9969,2,Suburban,Unsure,Solar + Gas
+Berkeley,California,USA,37.8715,-122.273,1,Urban,Unsure,PG&E
+San Jose,California,USA,37.3382,-121.8863,2,Suburban,Unsure,Solar
+Avondale,Arizona,USA,33.4356,-112.3496,3,Suburban,Unsure,Solar
+Beijing,China,China,39.9042,116.4074,5,Urban,Yes,Mixed
+Sun Valley (Los Angeles),California,USA,34.2279,-118.3813,2,Urban,No,Mixed
+Seoul,,South Korea,37.5665,126.978,3,Urban,Yes,Gas
+Brockton,Massachusetts,USA,42.0834,-71.0184,3,Suburban,Unsure,"National Grid, Mixed"
+Lucerne Valley,California,USA,34.4439,-116.9678,3,Rural,Yes,Solar
+Dublin,California,USA,37.7022,-121.9358,3,Suburban,Yes,PG&E
+Berkeley,California,USA,37.8715,-122.273,1,Suburban,Yes,Solar
+Tokyo,Japan,Japan,35.6895,139.6917,4,Urban,Yes,Gas
+Berkeley,California,USA,37.8715,-122.273,2,Rural,Unsure,Gas
+Ulsan,,South Korea,35.5384,129.3114,3,Urban,Yes,Gas
+Seoul,,South Korea,37.5665,126.978,3,Urban,No,gas
