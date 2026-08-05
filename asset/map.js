@@ -1,6 +1,10 @@
 const DATA_URL = "dataset_response.csv";
 const ARCGIS_PORTAL_URL = "https://cal.maps.arcgis.com";
 const ARCGIS_WEBMAP_ID = "747fdd2edea24067a4fa3f14c9fa3284";
+const INITIAL_VIEW = {
+  center: [-32, 32],
+  zoom: 2
+};
 const POLICY_BY_COUNTRY = {
   China: "policy_CN.html",
   Japan: "policy_JP.html",
@@ -78,6 +82,8 @@ async function init(WebMap, MapView, GraphicsLayer, Graphic) {
   view = new MapView({
     container: "map",
     map,
+    center: INITIAL_VIEW.center,
+    zoom: INITIAL_VIEW.zoom,
     constraints: {
       minZoom: 2,
       snapToZoom: false
@@ -92,6 +98,7 @@ async function init(WebMap, MapView, GraphicsLayer, Graphic) {
   window.__markersByKey = markersByKey;
 
   await view.when();
+  await view.goTo(INITIAL_VIEW, { animate: false }).catch(() => {});
   renderMarkers(groups, surveyLayer, Graphic);
   renderCityList(groups);
   bindResize();
