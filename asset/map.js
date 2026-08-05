@@ -1,4 +1,6 @@
 const DATA_URL = "dataset_response.csv";
+const ARCGIS_PORTAL_URL = "https://cal.maps.arcgis.com";
+const ARCGIS_WEBMAP_ID = "747fdd2edea24067a4fa3f14c9fa3284";
 const POLICY_BY_COUNTRY = {
   China: "policy_CN.html",
   Japan: "policy_JP.html",
@@ -40,26 +42,63 @@ const workspace = document.getElementById("workspace");
 const responseList = document.getElementById("response-list");
 const markersByKey = new Map();
 let map;
+let view;
 let activeCityItem = null;
 let resizeState = null;
 
-if (!window.L) {
+if (!window.require) {
   workspace.classList.add("is-error");
 } else {
-  init();
+  window.require([
+    "esri/config",
+    "esri/WebMap",
+    "esri/views/MapView",
+    "esri/layers/GraphicsLayer",
+    "esri/Graphic"
+  ], (esriConfig, WebMap, MapView, GraphicsLayer, Graphic) => {
+    esriConfig.portalUrl = ARCGIS_PORTAL_URL;
+    init(WebMap, MapView, GraphicsLayer, Graphic).catch(() => {
+      workspace.classList.add("is-error");
+    });
+  });
 }
 
-async function init() {
+async function init(WebMap, MapView, GraphicsLayer, Graphic) {
   const rows = parseCsv(await loadCsv());
   const groups = groupByCity(rows);
-  initMap();
-  renderMarkers(groups);
+  const surveyLayer = new GraphicsLayer({ title: "Survey Cities" });
+
+  map = new WebMap({
+    portalItem: {
+      id: ARCGIS_WEBMAP_ID
+    }
+  });
+  map.add(surveyLayer);
+
+  view = new MapView({
+    container: "map",
+    map,
+    constraints: {
+      minZoom: 2,
+      snapToZoom: false
+    },
+    popup: {
+      dockEnabled: false
+    }
+  });
+
+  window.map = map;
+  window.view = view;
+  window.__markersByKey = markersByKey;
+
+  await view.when();
+  renderMarkers(groups, surveyLayer, Graphic);
   renderCityList(groups);
   bindResize();
   document.getElementById("response-count").textContent = groups.length;
   window.__markerCount = groups.length;
   window.__responseCount = rows.length;
-  window.__markersByKey = markersByKey;
+  window.__arcgisWebMapId = ARCGIS_WEBMAP_ID;
 }
 
 async function loadCsv() {
@@ -72,55 +111,41 @@ async function loadCsv() {
   }
 }
 
-function initMap() {
-  map = L.map("map", {
-    center: [23, -155],
-    zoom: 3,
-    minZoom: 2,
-    maxZoom: 18,
-    worldCopyJump: true,
-    zoomControl: true
-  });
-
-  window.map = map;
-
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    noWrap: false,
-    attribution: "&copy; OpenStreetMap contributors"
-  }).addTo(map);
-
-  map.setMaxBounds([[-85, -Infinity], [85, Infinity]]);
-}
-
-function renderMarkers(groups) {
-  const bounds = [];
-
+function renderMarkers(groups, surveyLayer, Graphic) {
   groups.forEach((group) => {
     const areas = group.rows.map((row) => row.Area).filter(Boolean);
     const dominantArea = mostCommon(areas) || "Urban";
     const count = group.rows.length;
-    const marker = L.circleMarker([group.latitude, group.longitude], {
-      radius: 6 + count * 3,
-      color: "#ffffff",
-      weight: 2,
-      fillColor: AREA_COLORS[dominantArea] || "#596575",
-      fillOpacity: 0.86
-    })
-      .addTo(map)
-      .bindPopup(createPopup(group))
-      .bindTooltip(`${group.city} · ${count} response${count > 1 ? "s" : ""}`);
-
-    markersByKey.set(group.key, marker);
-    bounds.push([group.latitude, group.longitude]);
-  });
-
-  if (bounds.length) {
-    map.fitBounds(bounds, {
-      padding: [46, 46],
-      maxZoom: 4
+    const graphic = new Graphic({
+      geometry: {
+        type: "point",
+        longitude: group.longitude,
+        latitude: group.latitude
+      },
+      attributes: {
+        key: group.key,
+        city: group.city,
+        responseCount: count
+      },
+      symbol: {
+        type: "simple-marker",
+        style: "circle",
+        size: Math.min(24, 8 + count * 4),
+        color: AREA_COLORS[dominantArea] || "#596575",
+        outline: {
+          color: "#ffffff",
+          width: 1.75
+        }
+      },
+      popupTemplate: {
+        title: group.city,
+        content: createPopup(group)
+      }
     });
-  }
+
+    markersByKey.set(group.key, graphic);
+    surveyLayer.add(graphic);
+  });
 }
 
 function renderCityList(groups) {
@@ -155,10 +180,17 @@ function focusResponse(button) {
   activeCityItem = item;
   if (item) item.classList.add("is-active");
 
-  const marker = markersByKey.get(button.dataset.key);
-  if (!marker) return;
-  map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 5), { duration: 0.5 });
-  marker.openPopup();
+  const graphic = markersByKey.get(button.dataset.key);
+  if (!graphic || !view) return;
+  const targetZoom = Math.max(Number(view.zoom) || 3, 5);
+  view.goTo({
+    target: graphic.geometry,
+    zoom: targetZoom
+  }, { duration: 500 }).catch(() => {});
+  view.popup.open({
+    features: [graphic],
+    location: graphic.geometry
+  });
 }
 
 function bindResize() {
@@ -177,14 +209,14 @@ function bindResize() {
     if (!resizeState) return;
     const nextWidth = clamp(resizeState.startWidth + event.clientX - resizeState.startX, 230, 520);
     workspace.style.setProperty("--sidebar-width", `${nextWidth}px`);
-    map.invalidateSize();
+    if (view) view.resize();
   });
 
   handle.addEventListener("pointerup", (event) => {
     resizeState = null;
     document.body.style.userSelect = "";
     handle.releasePointerCapture(event.pointerId);
-    map.invalidateSize();
+    if (view) view.resize();
   });
 }
 
@@ -206,7 +238,6 @@ function createPopup(group) {
 
   return `
     <div class="popup">
-      <h2>${escapeHtml(group.city)}</h2>
       <p class="place">${escapeHtml(place)}</p>
       <p class="response-count">${count} response${count > 1 ? "s" : ""}</p>
       <ul>${items}</ul>
@@ -337,12 +368,16 @@ function linkUtilityNames(value) {
 
   while ((match = utilityPattern.exec(value))) {
     html += escapeHtml(value.slice(lastIndex, match.index));
-    html += `<a href="supporting.html">${escapeHtml(match[0])}</a>`;
+    html += `<a href="${escapeHtml(getSupportingsUrl())}">${escapeHtml(match[0])}</a>`;
     lastIndex = utilityPattern.lastIndex;
   }
 
   html += escapeHtml(value.slice(lastIndex));
   return html;
+}
+
+function getSupportingsUrl() {
+  return new URL("supporting.html", window.location.href).href;
 }
 
 function clamp(value, min, max) {

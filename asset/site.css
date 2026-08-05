@@ -391,15 +391,15 @@ p {
   background: var(--rural);
 }
 
-.leaflet-container {
+.esri-view {
   font: inherit;
 }
 
-.leaflet-popup-content-wrapper {
+.esri-popup__main-container {
   border-radius: 8px;
 }
 
-.leaflet-popup-content {
+.esri-popup__content {
   min-width: 240px;
 }
 
