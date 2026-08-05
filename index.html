@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Global Energy Awareness</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css">
-    <link rel="stylesheet" href="asset/site.css?v=arcgis-map-20260805">
+    <link rel="stylesheet" href="asset/site.css?v=arcgis-instant-20260805">
   </head>
   <body class="map-page">
     <div class="app">
@@ -20,24 +19,9 @@
       </header>
 
       <main>
-        <section class="workspace" id="workspace" aria-label="Survey response map workspace">
-          <aside class="response-panel" aria-label="City list">
-            <div class="panel-head">
-              <h2 class="panel-title">City List</h2>
-              <span class="panel-count" id="response-count">0</span>
-            </div>
-            <ul class="response-list" id="response-list"></ul>
-          </aside>
-
-          <div class="resize-handle" id="resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize city list"></div>
-
-          <section class="map-shell" aria-label="City response map">
+        <section class="workspace arcgis-workspace" id="workspace" aria-label="ArcGIS energy policy explorer">
+          <section class="map-shell" aria-label="ArcGIS energy policy explorer map">
             <div id="map"></div>
-            <div class="legend" aria-label="Area legend">
-              <span class="legend-item"><span class="dot urban"></span>Urban</span>
-              <span class="legend-item"><span class="dot suburban"></span>Suburban</span>
-              <span class="legend-item"><span class="dot rural"></span>Rural</span>
-            </div>
           </section>
         </section>
       </main>
@@ -50,7 +34,6 @@
       </footer>
     </div>
 
-    <script src="https://js.arcgis.com/4.30/"></script>
-    <script src="asset/map.js?v=arcgis-map-20260805"></script>
+    <script src="asset/map.js?v=arcgis-instant-20260805"></script>
   </body>
 </html>
