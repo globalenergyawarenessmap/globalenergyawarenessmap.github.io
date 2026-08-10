@@ -109,6 +109,10 @@ p {
   padding: clamp(28px, 6vw, 70px) 0;
 }
 
+.policy-overview-content {
+  width: min(1440px, calc(100% - 72px));
+}
+
 .content {
   display: grid;
   gap: 16px;
@@ -149,7 +153,7 @@ p {
 
 .policy-arcgis-embed {
   width: 100%;
-  height: clamp(420px, 58vh, 680px);
+  height: clamp(540px, calc(100vh - 160px), 860px);
   margin: 6px 0 10px;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -275,6 +279,15 @@ p {
     height: calc(100vh - 190px);
     min-height: 520px;
     display: block;
+  }
+
+  .policy-overview-content {
+    width: min(100% - 36px, 1440px);
+  }
+
+  .policy-arcgis-embed {
+    height: calc(100vh - 190px);
+    min-height: 520px;
   }
 
   .policy-map-row {
