@@ -1,4 +1,4 @@
-const ARCGIS_APP_URL = "https://cal.maps.arcgis.com/apps/instant/sidebar/index.html?appid=4ffaf67b00834bdda4cb919c2d6d7fef";
+const ARCGIS_APP_URL = "https://cal.maps.arcgis.com/apps/instant/sidebar/index.html?appid=c40971e689f54e48b922b0e5216ad320";
 
 const workspace = document.getElementById("workspace");
 const mapContainer = document.getElementById("map");
