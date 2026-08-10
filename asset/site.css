@@ -139,6 +139,17 @@ p {
   object-fit: contain;
 }
 
+.policy-arcgis-embed {
+  width: 100%;
+  height: clamp(420px, 58vh, 680px);
+  margin: 6px 0 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #dce9f4;
+  box-shadow: 0 14px 36px rgba(25, 32, 39, 0.1);
+}
+
 .app {
   min-height: 100vh;
   display: grid;
